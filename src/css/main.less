@@ -5,18 +5,107 @@ content {
 	left: 0;
 	right: 0;
 	bottom: 0;
+	border-radius: inherit;
 
-	.board {
+	.row {
+		height: 16px;
+		padding: 2px 0px 2px 0px;
+		background: #000;
+
+		* {
+			color: #fff;
+			font-weight: bold;
+			font-size: 13px;
+		}
+		span {
+			color: #F55;
+			margin: 0px 0px 0px 8px;
+		}
+		.level {
+			float: left;
+			width: 60px;
+			padding: 0px 130px 0px 2px;
+		}
+		.diamond {
+			float: left;
+			width: 100px;
+			padding: 0px 2px 0px 2px;
+		}
+		.score {
+			float: right;
+			width: 80px;
+			padding: 0px 2px 0px 2px;
+			text-align: right;
+		}
+	}
+
+	.rulers {
+		position: relative;
 		width: 450px;
 		height: 450px;
+		padding: 15px 17px 17px 15px;
+		background: #fff;
+
+		.rule-x {
+			background: rgba(0,0,0,.1);
+			position: absolute;
+			top: 19px;
+			left: 0px;
+			width: 480px;
+			height: 30px;
+		}
+
+		.rule-y {
+			background: rgba(0,0,0,.1);
+			position: absolute;
+			top: 0px;
+			left: 19px;
+			width: 30px;
+			height: 480px;
+		}
+
+		.aleft {
+			background-position: -60px -90px;
+			top: 0px;
+			left: 0px;
+			width: 15px;
+		}
+
+		.aright {
+			background-position: -90px -90px;
+			top: 0px;
+			left: 467px;
+			width: 15px;
+		}
+
+		.atop {
+			background-position: -150px -90px;
+			top: 0px;
+			left: 0px;
+			width: 15px;
+		}
+
+		.abottom {
+			background-position: -120px -90px;
+			top: 466px;
+			left: 0px;
+			width: 15px;
+		}
+	}
+
+	.board {
 		position: relative;
+		top: 0;
+		left: 0;
+		width: 450px;
+		height: 450px;
 		background: url(~/img/bg.png);
-		border: #666 1px solid;
+		border-radius: inherit;
 	}
 
 	.box {
 		background: url(~/img/box.png) -30px -60px no-repeat;
-		//position: absolute;
+		position: absolute;
 		width: 30px;
 		height: 30px;
 	}

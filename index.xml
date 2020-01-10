@@ -4,8 +4,8 @@
 		<meta name="title" value="Iceman" version="1.0"/>
 		<meta name="author" value="Hakan Bilgin" namespace="ant"/>
 		<meta name="license" value="AGPL-3.0-or-later"/>
-		<meta name="width" value="350"/>
-		<meta name="height" value="419"/>
+		<meta name="width" value="480"/>
+		<meta name="height" value="497"/>
 		<meta name="top" value="90"/>
 		<meta name="left" value="410"/>
 		<meta name="minimize"/>

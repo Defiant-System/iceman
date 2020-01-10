@@ -1,0 +1,55 @@
+<Application><Head><meta name="id" value="iceman"/><meta name="title" value="Iceman" version="1.0"/><meta name="author" value="Hakan Bilgin" namespace="ant"/><meta name="license" value="AGPL-3.0-or-later"/><meta name="width" value="480"/><meta name="height" value="497"/><meta name="top" value="90"/><meta name="left" value="410"/><meta name="minimize"/><meta name="maximize"/><meta name="resize" value="disabled"/><meta name="script" value="src/js/main.js"/><meta name="style" value="src/css/main.less"/><meta name="content" value="src/partials/content.htm"/><MenuBar>
+	<Menu name="Iceman">
+		<Menu name="About Iceman"/>
+		<Menu type="divider"/>
+		<Menu name="New Game" click="restart"/>
+		<Menu type="divider"/>
+		<Menu name="Hide Iceman"/>
+		<Menu name="Hide Others"/>
+		<Menu name="Show All" disabled="1"/>
+		<Menu type="divider"/>
+		<Menu name="Quit Iceman" shell="win -c"/>
+	</Menu>
+	<Menu name="Help">
+		<Menu name="How To Play" click="open-help"/>
+		<Menu type="divider"/>
+		<Menu name="Source Code"/>
+	</Menu>
+</MenuBar></Head> <script><![CDATA[ const iceman = {
+	init() {
+		
+	},
+	dispatch(event) {
+		switch (event.type) {
+			case "keystroke":
+				switch (event.char) {
+					case "up":    this.gameManager.move(0); break;
+					case "down":  this.gameManager.move(2); break;
+					case "left":  this.gameManager.move(3); break;
+					case "right": this.gameManager.move(1); break;
+				}
+				break;
+		}
+	}
+};
+
+window.exports = iceman;
+ ]]></script><style><![CDATA[ .ant-window_[data-id="iceman"] .win-body_ content{position:absolute;top:0;left:0;right:0;bottom:0;border-radius:inherit}.ant-window_[data-id="iceman"] .win-body_ content .row{height:16px;padding:2px 0px 2px 0px;background:#000}.ant-window_[data-id="iceman"] .win-body_ content .row *{color:#fff;font-weight:bold;font-size:13px}.ant-window_[data-id="iceman"] .win-body_ content .row span{color:#F55;margin:0px 0px 0px 8px}.ant-window_[data-id="iceman"] .win-body_ content .row .level{float:left;width:60px;padding:0px 130px 0px 2px}.ant-window_[data-id="iceman"] .win-body_ content .row .diamond{float:left;width:100px;padding:0px 2px 0px 2px}.ant-window_[data-id="iceman"] .win-body_ content .row .score{float:right;width:80px;padding:0px 2px 0px 2px;text-align:right}.ant-window_[data-id="iceman"] .win-body_ content .rulers{position:relative;width:450px;height:450px;padding:15px 17px 17px 15px;background:#fff}.ant-window_[data-id="iceman"] .win-body_ content .rulers .rule-x{background:rgba(0,0,0,0.1);position:absolute;top:19px;left:0px;width:480px;height:30px}.ant-window_[data-id="iceman"] .win-body_ content .rulers .rule-y{background:rgba(0,0,0,0.1);position:absolute;top:0px;left:19px;width:30px;height:480px}.ant-window_[data-id="iceman"] .win-body_ content .rulers .aleft{background-position:-60px -90px;top:0px;left:0px;width:15px}.ant-window_[data-id="iceman"] .win-body_ content .rulers .aright{background-position:-90px -90px;top:0px;left:467px;width:15px}.ant-window_[data-id="iceman"] .win-body_ content .rulers .atop{background-position:-150px -90px;top:0px;left:0px;width:15px}.ant-window_[data-id="iceman"] .win-body_ content .rulers .abottom{background-position:-120px -90px;top:466px;left:0px;width:15px}.ant-window_[data-id="iceman"] .win-body_ content .board{position:relative;top:0;left:0;width:450px;height:450px;background:url(/app/ant/iceman/img/bg.png);border-radius:inherit}.ant-window_[data-id="iceman"] .win-body_ content .box{background:url(/app/ant/iceman/img/box.png) -30px -60px no-repeat;position:absolute;width:30px;height:30px} ]]></style><WindowBody><![CDATA[ <content>
+	<div class="row">
+		<div class="level">Level:<span>1</span></div>
+		<div class="diamond">Diamonds:<span>0</span></div>
+		<div class="score">Score:<span>0</span></div>
+	</div>
+	<div class="rulers">
+		<div class="rule-y">
+			<div class="box aleft"></div>
+			<div class="box aright"></div>
+		</div>
+		<div class="rule-x">
+			<div class="box atop"></div>
+			<div class="box abottom"></div>
+		</div>
+		<div class="board"></div>
+	</div>
+</content>
+ ]]></WindowBody><WindowIcons><![CDATA[  ]]></WindowIcons></Application>
