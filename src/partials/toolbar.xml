@@ -1,0 +1,11 @@
+<ToolBar>
+	<Group width="59%">
+		<Tool name="Restart" click="restart-level"/>
+	</Group>
+	<Group width="41%" class="toolbar-score">
+		<Field>
+			<span class="left level">Level: <b>1</b></span>
+			<span class="right diamonds">Gems: <b>0 / 43</b></span>
+		</Field>
+	</Group>
+</ToolBar>

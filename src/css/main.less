@@ -1,97 +1,14 @@
 
+background: #222;
+
 content {
 	position: absolute;
 	top: 0;
 	left: 0;
 	right: 0;
 	bottom: 0;
+	padding: 3px;
 	border-radius: inherit;
-
-	.row {
-		height: 16px;
-		padding: 2px 0px 2px 0px;
-		background: #000;
-
-		* {
-			color: #fff;
-			font-weight: bold;
-			font-size: 13px;
-		}
-		span {
-			color: #F55;
-			margin: 0px 0px 0px 8px;
-		}
-		.level {
-			float: left;
-			width: 60px;
-			padding: 0px 130px 0px 2px;
-		}
-		.diamond {
-			float: left;
-			width: 100px;
-			padding: 0px 2px 0px 2px;
-		}
-		.score {
-			float: right;
-			width: 80px;
-			padding: 0px 2px 0px 2px;
-			text-align: right;
-		}
-	}
-
-	.rulers {
-		position: relative;
-		width: 450px;
-		height: 450px;
-		padding: 15px 17px 17px 15px;
-		background: #fff;
-
-		.rule-x {
-			background: rgba(0,0,0,.1);
-			position: absolute;
-			top: 19px;
-			left: 0px;
-			width: 480px;
-			height: 30px;
-		}
-
-		.rule-y {
-			background: rgba(0,0,0,.1);
-			position: absolute;
-			top: 0px;
-			left: 19px;
-			width: 30px;
-			height: 480px;
-		}
-
-		.aleft {
-			background-position: -60px -90px;
-			top: 0px;
-			left: 0px;
-			width: 15px;
-		}
-
-		.aright {
-			background-position: -90px -90px;
-			top: 0px;
-			left: 467px;
-			width: 15px;
-		}
-
-		.atop {
-			background-position: -150px -90px;
-			top: 0px;
-			left: 0px;
-			width: 15px;
-		}
-
-		.abottom {
-			background-position: -120px -90px;
-			top: 466px;
-			left: 0px;
-			width: 15px;
-		}
-	}
 
 	.board {
 		position: relative;
@@ -100,7 +17,8 @@ content {
 		width: 450px;
 		height: 450px;
 		background: url(~/img/bg.png);
-		border-radius: inherit;
+		border-radius: 1px;
+		font-size: 0;
 	}
 
 	.box {
@@ -108,5 +26,29 @@ content {
 		position: absolute;
 		width: 30px;
 		height: 30px;
+
+		&.player { z-index: 2; }
+
+		&.b0 {background-position: 30px 0px;}
+		&.b1 {background-position: 0px 0px;}
+		&.b2 {background-position: -30px 0px;}
+		&.b3 {background-position: -60px 0px;}
+		&.b4 {background-position: -90px 0px;}
+		&.b5 {background-position: -120px 0px;}
+		&.b6 {background-position: -150px 0px;}
+		&.b7 {background-position: 0px -30px;}
+		&.b8 {background-position: -30px -30px;}
+		&.b9 {background-position: -60px -30px;}
+		&.bA {background-position: -90px -30px;}
+		&.bB {background-position: -120px -30px;}
+		&.bC {background-position: -150px -30px;}
+		&.bF {background-position: -30px -90px;}
+
+		&.p1 {background-position: 0px -60px;}
+		&.p2 {background-position: -30px -60px;}
+		&.p3 {background-position: -60px -60px;}
+		&.p4 {background-position: -90px -60px;}
+		&.p5 {background-position: -120px -60px;}
+		&.p6 {background-position: -150px -60px;}
 	}
 }
