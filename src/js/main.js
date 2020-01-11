@@ -3,8 +3,10 @@ const iceman = {
 	init() {
 		// fast references
 		this.board = window.find(".board");
+		this.toolLevel = window.find(".toolbar-info .level b");
+		this.toolGems = window.find(".toolbar-info .gems b");
 
-		this.drawLevel(1);
+		this.drawLevel(8);
 	},
 	dispatch(event) {
 		switch (event.type) {
@@ -43,23 +45,29 @@ const iceman = {
 			left: (x * 30) +"px"
 		});
 
-		if (~GEMS.indexOf(c)) {
+		if (GEMS.indexOf(c) > -1) {
 			this.score(c);
 		}
+		if (c === 'F' && PLAYER.gems.eaten === PLAYER.gems.needed) {
+			console.log("Level finished");
+			PLAYER.moving = false;
+			return;
+		}
 
-		setTimeout(() => iceman.move(dir), 60);
+		setTimeout(() => iceman.move(dir), 30);
 	},
 	score(gem) {
-		if (gem) {
-			this.board.find(`.box[data-pos="${PLAYER.x}-${PLAYER.y}"]`).remove();
+		let pos = (PLAYER.y * 15) + PLAYER.x;
+		PLAYER.board = PLAYER.board.slice(0, pos) +"0"+ PLAYER.board.slice(pos + 1);
 
-			PLAYER.gems.eaten++;
-			PLAYER.property = parseInt(gem, 16) - 6;
-			PLAYER.el.prop({
-				className: "box player p"+ PLAYER.property
-			});
-		}
-		//console.log( PLAYER.gems.eaten, PLAYER.gems.needed );
+		this.board.find(`.box[data-pos="${PLAYER.x}-${PLAYER.y}"]`).remove();
+
+		PLAYER.gems.eaten++;
+		PLAYER.property = parseInt(gem, 16) - 6;
+		// set user UI property
+		PLAYER.el.prop({className: "box player p"+ PLAYER.property});
+
+		this.toolGems.html(PLAYER.gems.eaten +" / "+ PLAYER.gems.needed);
 	},
 	drawLevel(n) {
 		let level = LEVELS[n],
@@ -68,14 +76,14 @@ const iceman = {
 			htm = [];
 
 		// player element
-		htm.push(`<div class="box player p${level.player.cn}" style="top: ${top}px; left: ${left}px;"></div>`);
+		htm.push(`<div class="box player p${level.player.property}" style="top: ${top}px; left: ${left}px;"></div>`);
 
 		level.board.split("").map((b, i) => {
 			if (b === "0") return;
 
 			let x = i % 15,
 				y = parseInt(i / 15, 10),
-				pos = ~GEMS.indexOf(b) ? `data-pos="${x}-${y}"` : "";
+				pos = GEMS.indexOf(b) > -1 ? `data-pos="${x}-${y}"` : "";
 
 			htm.push(`<div class="box b${b}" style="top: ${y * 30}px; left: ${x * 30}px;" ${pos}></div>`);
 		});
@@ -89,12 +97,18 @@ const iceman = {
 		PLAYER.x = level.player.x;
 		PLAYER.level = n;
 		PLAYER.moving = false;
-		PLAYER.property = level.property;
+		PLAYER.property = level.player.property;
 		PLAYER.board = level.board;
 		PLAYER.gems = {
 			eaten: 0,
 			needed: level.gems
 		};
+		// set user UI property
+		PLAYER.el.prop({className: "box player p"+ PLAYER.property});
+
+		// update toolbar
+		this.toolLevel.html(n);
+		this.toolGems.html(PLAYER.gems.eaten +" / "+ PLAYER.gems.needed);
 	}
 };
 
@@ -135,12 +149,12 @@ const LEVELS = {
 	},
 	5: {
 		player: { x: 0, y: 0, property: 6 },
-		gems: 20,
+		gems: 10,
 		board: "0B200000000000008000000000020008002B000000B000800000000000000000000000000000000000000000000000000000000000800000000000000008000000500000005000000000000000050000000000B0000000000B20020000000000000000000F00000000000000000500000"
 	},
 	6: {
 		player: { x: 0, y: 0, property: 3 },
-		gems: 10,
+		gems: 20,
 		board: "000000C0C0060030F0000000000000000002000000000C0C0090000000A00000090000000A00200090000000000000000900000000000100CCC00000000000000000050000000000000000000007000000F00A010000000000000000060000000000000000000A9A90610000000000007"
 	},
 	7: {
