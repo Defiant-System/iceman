@@ -31,6 +31,7 @@ content {
 		&.player { z-index: 2; }
 		&.moving {
 			transition: all var(--speed) linear;
+			transition-property: top, left;
 		}
 		&.vanish {
 			transition: all 0ms var(--delay) linear;
