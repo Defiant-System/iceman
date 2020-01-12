@@ -8,7 +8,7 @@ const iceman = {
 		this.toolLevel = window.find(".toolbar-info .level b");
 		this.toolGems = window.find(".toolbar-info .gems b");
 
-		this.drawLevel(2);
+		this.drawLevel(1);
 	},
 	dispatch(event) {
 		switch (event.type) {
@@ -87,7 +87,7 @@ const iceman = {
 		
 		// check for gems on path
 		if (GEMS.indexOf(c) > -1) {
-			let el = this.board.find(`.box[data-pos="${this.vector.x}-${this.vector.y}"]`);
+			let el = this.board.find(`.box[data-gem="${this.vector.y}-${this.vector.x}"]`);
 			let distance = Math.abs(PLAYER.x - this.vector.x || PLAYER.y - this.vector.y);
 			let pos = (this.vector.y * 15) + this.vector.x;
 			let action = () => {
@@ -136,9 +136,10 @@ const iceman = {
 
 			let x = i % 15,
 				y = parseInt(i / 15, 10),
-				pos = GEMS.indexOf(b) > -1 ? `data-pos="${x}-${y}"` : "";
+				gem = GEMS.indexOf(b) > -1 ? `data-gem="${y}-${x}"` : "",
+				appear = Math.max(Math.abs(7-y), Math.abs(7-x));
 
-			htm.push(`<div class="box b${b}" style="top: ${y * 30}px; left: ${x * 30}px;" ${pos}></div>`);
+			htm.push(`<div class="box b${b}" data-appear="${appear + 1}" style="top: ${y * 30}px; left: ${x * 30}px;" ${gem}></div>`);
 		});
 
 		// reset board
