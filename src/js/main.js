@@ -8,7 +8,7 @@ const iceman = {
 		this.toolLevel = window.find(".toolbar-info .level b");
 		this.toolGems = window.find(".toolbar-info .gems b");
 
-		this.drawLevel(1);
+		this.drawLevel(2);
 	},
 	dispatch(event) {
 		switch (event.type) {
@@ -30,79 +30,34 @@ const iceman = {
 		}
 	},
 	move(dir) {
-		let vector = { ...PLAYER, timeline: [] };
-		let getVector = (dir) => {
-			let x = (dir === 4) ? vector.x + 1 : (dir === 2) ? vector.x - 1 : vector.x;
-			let y = (dir === 3) ? vector.y + 1 : (dir === 1) ? vector.y - 1 : vector.y;
-			let c = vector.board.charAt((y * 15) + x);
-			if ((x == 15 || x == -1 || y == 15 || y == -1)
-				|| (parseInt(c, 10) > 0 && parseInt(c, 10) < 7 && c != vector.property)) {
-				return;
-			}
-			// update vector
-			vector.x = x;
-			vector.y = y;
-
-			// check for level exit
-			if (c === 'F' && vector.gems.eaten === vector.gems.needed) {
-				vector.finished = true; // Level finished
-				return;
-			}
-			
-			// check for gems on path
-			if (GEMS.indexOf(c) > -1) {
-				let el = this.board.find(`.box[data-pos="${vector.x}-${vector.y}"]`);
-				let distance = Math.abs(PLAYER.x - vector.x || PLAYER.y - vector.y);
-				let pos = (vector.y * 15) + vector.x;
-				let action = () => {
-						let property = PLAYER.property;
-
-						// remove gem from DOM
-						el.remove()
-
-						// update player
-						PLAYER.board = PLAYER.board.slice(0, pos) +"0"+ PLAYER.board.slice(pos + 1);
-						PLAYER.gems.eaten++;
-						PLAYER.property = parseInt(c, 16) - 6;
-
-						// set user UI property
-						PLAYER.el
-							.removeClass("p"+ property)
-							.addClass("p"+ PLAYER.property);
-
-						// update toolbar
-						this.toolGems.html(PLAYER.gems.eaten +" / "+ PLAYER.gems.needed);
-					};
-
-				// save for timeline
-				vector.timeline.push({ el, distance, action, x: vector.x, y: vector.y });
-			}
-			getVector(dir);
-		};
-		getVector(dir);
+		// look in to the "future"
+		this.vector = { ...PLAYER, timeline: [] };
+		this.getVector(dir);
 
 		// calculate distance in order to calc movement speed
-		vector.distance = Math.abs(PLAYER.x - vector.x || PLAYER.y - vector.y);
+		this.vector.distance = Math.abs(PLAYER.x - this.vector.x || PLAYER.y - this.vector.y);
 
-		PLAYER.x = vector.x;
-		PLAYER.y = vector.y;
+		PLAYER.x = this.vector.x;
+		PLAYER.y = this.vector.y;
 		PLAYER.el
 			.cssSequence("moving", "transitionend", el => {
 				el.removeClass("moving");
 				PLAYER.moving = false;
-				
-				if (vector.finished) {
-					console.log("finished")
+
+				if (this.vector.finished) {
+					PLAYER.el.cssSequence("exit", "animationend", el => {
+						// next level
+					});
 				}
 			})
-			.prop({style: `--speed: ${vector.distance * PLAYER.speed}ms`})
+			.prop({style: `--speed: ${this.vector.distance * PLAYER.speed}ms`})
 			.css({
 				top: (PLAYER.y * 30) +"px",
 				left: (PLAYER.x * 30) +"px"
 			});
 
-		// eat gems timeline
-		vector.timeline.map(event =>
+		// playback timeline
+		this.vector.timeline.map(event =>
 			event.el
 				.prop({style: `--delay: ${event.distance * PLAYER.speed}ms`})
 				.cssSequence("vanish", "transitionend", el => event.action())
@@ -110,6 +65,62 @@ const iceman = {
 					top: (event.y * 30) +"px",
 					left: (event.x * 30) +"px"
 				}));
+	},
+	getVector(dir) {
+		let x = (dir === 4) ? this.vector.x + 1 : (dir === 2) ? this.vector.x - 1 : this.vector.x;
+		let y = (dir === 3) ? this.vector.y + 1 : (dir === 1) ? this.vector.y - 1 : this.vector.y;
+		let c = this.vector.board.charAt((y * 15) + x);
+		if ((x == 15 || x == -1 || y == 15 || y == -1)
+			|| (parseInt(c, 10) > 0 && parseInt(c, 10) < 7 && c != this.vector.property)) {
+			return;
+		}
+
+		// update this.vector
+		this.vector.x = x;
+		this.vector.y = y;
+
+		// check for level exit
+		if (c === 'F' && this.vector.gems.eaten === this.vector.gems.needed) {
+			this.vector.finished = true; // Level finished
+			return;
+		}
+		
+		// check for gems on path
+		if (GEMS.indexOf(c) > -1) {
+			let el = this.board.find(`.box[data-pos="${this.vector.x}-${this.vector.y}"]`);
+			let distance = Math.abs(PLAYER.x - this.vector.x || PLAYER.y - this.vector.y);
+			let pos = (this.vector.y * 15) + this.vector.x;
+			let action = () => {
+					let property = PLAYER.property;
+
+					// remove gem from DOM
+					el.remove()
+
+					// update player
+					PLAYER.board = PLAYER.board.slice(0, pos) +"0"+ PLAYER.board.slice(pos + 1);
+					PLAYER.gems.eaten++;
+					PLAYER.property = parseInt(c, 16) - 6;
+
+					// set user UI property
+					PLAYER.el
+						.removeClass("p"+ property)
+						.addClass("p"+ PLAYER.property);
+
+					if (PLAYER.gems.eaten === PLAYER.gems.needed) {
+						this.board.find(".box.bF").addClass("exit-open");
+					}
+
+					// update toolbar
+					this.toolGems.html(PLAYER.gems.eaten +" / "+ PLAYER.gems.needed);
+				};
+
+			// change vector property
+			this.vector.property = parseInt(c, 16) - 6;
+
+			// save for timeline
+			this.vector.timeline.push({ el, distance, action, x: this.vector.x, y: this.vector.y });
+		}
+		this.getVector(dir);
 	},
 	drawLevel(n) {
 		let level = LEVELS[n],

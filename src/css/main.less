@@ -28,7 +28,43 @@ content {
 		height: 30px;
 		opacity: 1;
 
-		&.player { z-index: 2; }
+		&.player {
+			background: none;
+			z-index: 2;
+
+			&:not(.exit):before {
+				content: "";
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				background: #060;
+				border-radius: 9px;
+				filter: blur(2px);
+				animation: pulsate 1000ms ease-in-out infinite;
+			}
+			&:after {
+				content: "";
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				background: url(~/img/box.png) -30px -60px no-repeat;
+			}
+
+			&.exit {
+				animation: exit 300ms ease-in forwards;
+			}
+
+			&.p1:before { background: #790391; }
+			&.p2:before { background: #12bcf6; }
+			&.p3:before { background: #309103; }
+			&.p4:before { background: #91030a; }
+			&.p5:before { background: #0daa8b; }
+			&.p6:before { background: #944000; }
+		}
 		&.moving {
 			transition: all var(--speed) linear;
 			transition-property: top, left;
@@ -37,27 +73,69 @@ content {
 			transition: all 0ms var(--delay) linear;
 			opacity: 0;
 		}
+		&.bF.exit-open {
+			background: none;
 
-		&.b0 {background-position: 30px 0px;}
-		&.b1 {background-position: 0px 0px;}
-		&.b2 {background-position: -30px 0px;}
-		&.b3 {background-position: -60px 0px;}
-		&.b4 {background-position: -90px 0px;}
-		&.b5 {background-position: -120px 0px;}
-		&.b6 {background-position: -150px 0px;}
-		&.b7 {background-position: 0px -30px;}
-		&.b8 {background-position: -30px -30px;}
-		&.b9 {background-position: -60px -30px;}
-		&.bA {background-position: -90px -30px;}
-		&.bB {background-position: -120px -30px;}
-		&.bC {background-position: -150px -30px;}
-		&.bF {background-position: -30px -90px;}
+			&:before {
+				content: "";
+				position: absolute;
+				top: 4px;
+				left: 4px;
+				right: 4px;
+				bottom: 4px;
+				animation: rainbow 900ms linear infinite;
+			}
 
-		&.p1 {background-position: 0px -60px;}
-		&.p2 {background-position: -30px -60px;}
-		&.p3 {background-position: -60px -60px;}
-		&.p4 {background-position: -90px -60px;}
-		&.p5 {background-position: -120px -60px;}
-		&.p6 {background-position: -150px -60px;}
+			&:after {
+				content: "";
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				background: url(~/img/box.png) -30px -60px no-repeat;
+				background-position: -60px -90px;
+			}
+		}
+
+		&.b0 { background-position: 30px 0px; }
+		&.b1 { background-position: 0px 0px; }
+		&.b2 { background-position: -30px 0px; }
+		&.b3 { background-position: -60px 0px; }
+		&.b4 { background-position: -90px 0px; }
+		&.b5 { background-position: -120px 0px; }
+		&.b6 { background-position: -150px 0px; }
+		&.b7 { background-position: 0px -30px; }
+		&.b8 { background-position: -30px -30px; }
+		&.b9 { background-position: -60px -30px; }
+		&.bA { background-position: -90px -30px; }
+		&.bB { background-position: -120px -30px; }
+		&.bC { background-position: -150px -30px; }
+		&.bF { background-position: -30px -90px; }
+
+		&.p1:after { background-position: 0px -60px; }
+		&.p2:after { background-position: -30px -60px; }
+		&.p3:after { background-position: -60px -60px; }
+		&.p4:after { background-position: -90px -60px; }
+		&.p5:after { background-position: -120px -60px; }
+		&.p6:after { background-position: -150px -60px; }
 	}
 }
+
+@keyframes pulsate {
+	0%   { transform: rotate(45deg) scale(0.85); }
+	50%  { transform: rotate(45deg) scale(0.75); }
+	100% { transform: rotate(45deg) scale(0.85); }
+}
+
+@keyframes rainbow {
+	100%,
+	0%  { background: #888; }
+	50% { background: #fff; }
+}
+
+@keyframes exit {
+	0%   { transform: scale(1); }
+	100% { transform: scale(0); }
+}
+
