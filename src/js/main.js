@@ -6,7 +6,7 @@ const iceman = {
 		this.toolLevel = window.find(".toolbar-info .level b");
 		this.toolGems = window.find(".toolbar-info .gems b");
 
-		this.drawLevel(8);
+		this.drawLevel(1);
 	},
 	dispatch(event) {
 		switch (event.type) {
@@ -26,7 +26,77 @@ const iceman = {
 				break;
 		}
 	},
+	score(gem) {
+		let pos = (PLAYER.y * 15) + PLAYER.x;
+		PLAYER.board = PLAYER.board.slice(0, pos) +"0"+ PLAYER.board.slice(pos + 1);
+
+		this.board.find(`.box[data-pos="${PLAYER.x}-${PLAYER.y}"]`).remove();
+
+		PLAYER.gems.eaten++;
+		PLAYER.property = parseInt(gem, 16) - 6;
+		// set user UI property
+		PLAYER.el.prop({className: "box player p"+ PLAYER.property});
+
+		this.toolGems.html(PLAYER.gems.eaten +" / "+ PLAYER.gems.needed);
+	},
 	move(dir) {
+		let vector = { ...PLAYER, playback: [] };
+		let getVector = (dir) => {
+			let x = (dir === 4) ? vector.x + 1 : (dir === 2) ? vector.x - 1 : vector.x;
+			let y = (dir === 3) ? vector.y + 1 : (dir === 1) ? vector.y - 1 : vector.y;
+			let c = vector.board.charAt((y * 15) + x);
+			if ((x == 15 || x == -1 || y == 15 || y == -1)
+				|| (parseInt(c, 10) > 0 && parseInt(c, 10) < 7 && c != vector.property)) {
+				return;
+			}
+			if (c === 'F' && vector.gems.eaten === vector.gems.needed) {
+				vector.finished = true; // Level finished
+				return;
+			}
+			// update vector
+			vector.x = x;
+			vector.y = y;
+			
+			// check for gems on path
+			if (GEMS.indexOf(c) > -1) {
+				let el = this.board.find(`.box[data-pos="${vector.x}-${vector.y}"]`);
+				let distance = Math.abs(PLAYER.x - vector.x || PLAYER.y - vector.y);
+				let pos = (vector.y * 15) + vector.x;
+
+				// update player board
+				PLAYER.board = PLAYER.board.slice(0, pos) +"0"+ PLAYER.board.slice(pos + 1);
+
+				// save for playback
+				vector.playback.push({ el, distance, x: vector.x, y: vector.y });
+			}
+			getVector(dir);
+		};
+		getVector(dir);
+
+		// calculate distance in order to calc movement speed
+		vector.distance = Math.abs(PLAYER.x - vector.x || PLAYER.y - vector.y);
+
+		PLAYER.x = vector.x;
+		PLAYER.y = vector.y;
+		PLAYER.el
+			.cssSequence("moving", "transitionend", el => el.removeClass("moving"))
+			.prop({style: `--speed: ${vector.distance * PLAYER.speed}ms`})
+			.css({
+				top: (PLAYER.y * 30) +"px",
+				left: (PLAYER.x * 30) +"px"
+			});
+
+		// eat gems playback
+		vector.playback.map(gem =>
+			gem.el
+				.prop({style: `--delay: ${gem.distance * PLAYER.speed}ms`})
+				.cssSequence("vanish", "transitionend", el => el.remove())
+				.css({
+					top: (gem.y * 30) +"px",
+					left: (gem.x * 30) +"px"
+				}));
+	},
+	move2(dir) {
 		let x = (dir === 4) ? PLAYER.x + 1 : (dir === 2) ? PLAYER.x - 1 : PLAYER.x;
 		let y = (dir === 3) ? PLAYER.y + 1 : (dir === 1) ? PLAYER.y - 1 : PLAYER.y;
 		let c = PLAYER.board.charAt((y * 15) + x);
@@ -40,10 +110,15 @@ const iceman = {
 		PLAYER.moving = true;
 		PLAYER.x = x;
 		PLAYER.y = y;
-		PLAYER.el.css({
-			top: (y * 30) +"px",
-			left: (x * 30) +"px"
-		});
+		PLAYER.el
+			// .cssSequence("moving", "transitionend", el => {
+			// 	el.removeClass("moving");
+			// 	iceman.move(dir);
+			// })
+			.css({
+				top: (y * 30) +"px",
+				left: (x * 30) +"px"
+			});
 
 		if (GEMS.indexOf(c) > -1) {
 			this.score(c);
@@ -53,21 +128,7 @@ const iceman = {
 			PLAYER.moving = false;
 			return;
 		}
-
-		setTimeout(() => iceman.move(dir), 30);
-	},
-	score(gem) {
-		let pos = (PLAYER.y * 15) + PLAYER.x;
-		PLAYER.board = PLAYER.board.slice(0, pos) +"0"+ PLAYER.board.slice(pos + 1);
-
-		this.board.find(`.box[data-pos="${PLAYER.x}-${PLAYER.y}"]`).remove();
-
-		PLAYER.gems.eaten++;
-		PLAYER.property = parseInt(gem, 16) - 6;
-		// set user UI property
-		PLAYER.el.prop({className: "box player p"+ PLAYER.property});
-
-		this.toolGems.html(PLAYER.gems.eaten +" / "+ PLAYER.gems.needed);
+		//setTimeout(() => iceman.move(dir), 30);
 	},
 	drawLevel(n) {
 		let level = LEVELS[n],
@@ -119,6 +180,7 @@ const PLAYER = {
 	el: false,
 	moving: false,
 	property: 0,
+	speed: 20,
 	x: 0,
 	y: 0,
 	level: 0
