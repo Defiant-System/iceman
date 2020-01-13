@@ -4,11 +4,12 @@ import { PLAYER, GEMS, LEVELS } from "./constants"
 const iceman = {
 	init() {
 		// fast references
+		this.content = window.find("content");
 		this.board = window.find(".board");
 		this.toolLevel = window.find(".toolbar-info .level b");
 		this.toolGems = window.find(".toolbar-info .gems b");
 
-		this.drawLevel(1);
+		this.dispatch({type: "next-level"});
 	},
 	dispatch(event) {
 		switch (event.type) {
@@ -23,6 +24,21 @@ const iceman = {
 					case "left":  this.move(2); break;
 					case "right": this.move(4); break;
 				}
+				break;
+			case "level-completed":
+				// next level
+				this.content.addClass("game-won");
+				break;
+			case "next-level":
+				this.content.addClass("hide-game-won");
+				this.board.cssSequence("black-out", "transitionend", el => {
+					this.content.removeClass("game-won hide-game-won");
+
+					PLAYER.level++;
+					this.drawLevel(PLAYER.level);
+
+					el.removeClass("black-out");
+				});
 				break;
 			case "restart-level":
 				this.drawLevel(PLAYER.level);
@@ -46,7 +62,7 @@ const iceman = {
 
 				if (this.vector.finished) {
 					PLAYER.el.cssSequence("exit", "animationend", el => {
-						// next level
+						this.dispatch({type: "level-completed"});
 					});
 				}
 			})
@@ -69,7 +85,7 @@ const iceman = {
 	getVector(dir) {
 		let x = (dir === 4) ? this.vector.x + 1 : (dir === 2) ? this.vector.x - 1 : this.vector.x;
 		let y = (dir === 3) ? this.vector.y + 1 : (dir === 1) ? this.vector.y - 1 : this.vector.y;
-		let c = this.vector.board.charAt((y * 15) + x);
+		let c = this.vector.map.charAt((y * 15) + x);
 		if ((x == 15 || x == -1 || y == 15 || y == -1)
 			|| (parseInt(c, 10) > 0 && parseInt(c, 10) < 7 && c != this.vector.property)) {
 			return;
@@ -97,7 +113,7 @@ const iceman = {
 					el.remove()
 
 					// update player
-					PLAYER.board = PLAYER.board.slice(0, pos) +"0"+ PLAYER.board.slice(pos + 1);
+					PLAYER.map = PLAYER.map.slice(0, pos) +"0"+ PLAYER.map.slice(pos + 1);
 					PLAYER.gems.eaten++;
 					PLAYER.property = parseInt(c, 16) - 6;
 
@@ -131,19 +147,31 @@ const iceman = {
 		// player element
 		htm.push(`<div class="box player p${level.player.property}" style="top: ${top}px; left: ${left}px;"></div>`);
 
-		level.board.split("").map((b, i) => {
+		// level map
+		level.map.split("").map((b, i) => {
 			if (b === "0") return;
 
 			let x = i % 15,
 				y = parseInt(i / 15, 10),
-				gem = GEMS.indexOf(b) > -1 ? `data-gem="${y}-${x}"` : "",
-				appear = Math.max(Math.abs(7-y), Math.abs(7-x));
+				gem = GEMS.indexOf(b) > -1 ? `data-gem="${y}-${x}"` : "";
 
-			htm.push(`<div class="box b${b}" data-appear="${appear + 1}" style="top: ${y * 30}px; left: ${x * 30}px;" ${gem}></div>`);
+			htm.push(`<div class="box b${b}" style="top: ${y * 30}px; left: ${x * 30}px;" ${gem}></div>`);
+		});
+
+		// covers
+		level.map.split("").map((b, i) => {
+			let x = i % 15,
+				y = parseInt(i / 15, 10),
+				cover = Math.max(Math.abs(7-y), Math.abs(7-x));
+			
+			htm.push(`<div class="cover" style="top: ${y * 30}px; left: ${x * 30}px;" data-num="${cover + 1}"></div>`);
 		});
 
 		// reset board
 		this.board.html(htm.join(""));
+
+		// uncover level map
+		this.board.find(".cover").cssSequence("uncover", "animationend", el => el.remove());
 
 		// reset player
 		PLAYER.el = this.board.find(".player");
@@ -152,7 +180,7 @@ const iceman = {
 		PLAYER.level = n;
 		PLAYER.moving = false;
 		PLAYER.property = level.player.property;
-		PLAYER.board = level.board;
+		PLAYER.map = level.map;
 		PLAYER.gems = {
 			eaten: 0,
 			needed: level.gems
