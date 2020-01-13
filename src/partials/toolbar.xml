@@ -1,11 +1,12 @@
 <ToolBar>
 	<Group width="59%">
 		<Tool name="Restart" click="restart-level"/>
+		<Tool name="Music" click="toggle-music"/>
 	</Group>
 	<Group width="41%" class="toolbar-info">
 		<Field>
-			<span class="left level">Level: <b>1</b></span>
-			<span class="right gems">Gems: <b>0 / 1</b></span>
+			<span class="left level">Level: <b></b></span>
+			<span class="right gems">Gems: <b></b></span>
 		</Field>
 	</Group>
 </ToolBar>
