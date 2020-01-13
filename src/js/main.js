@@ -67,7 +67,7 @@ const iceman = {
 					});
 				}
 			})
-			.prop({style: `--speed: ${this.vector.distance * PLAYER.speed}ms`})
+			.prop({style: `--speed: ${this.vector.distance * PLAYER.speed || 1}ms`})
 			.css({
 				top: (PLAYER.y * 30) +"px",
 				left: (PLAYER.x * 30) +"px"
