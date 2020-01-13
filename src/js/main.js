@@ -9,6 +9,7 @@ const iceman = {
 		this.toolLevel = window.find(".toolbar-info .level b");
 		this.toolGems = window.find(".toolbar-info .gems b");
 
+		//this.dispatch({type: "level-completed"});
 		this.dispatch({type: "next-level"});
 	},
 	dispatch(event) {
