@@ -187,6 +187,7 @@ const iceman = {
 		};
 		// set user UI property
 		PLAYER.el.prop({className: "box player p"+ PLAYER.property});
+		PLAYER.el.cssSequence("bounce", "animationend", el => el.removeClass("bounce"));
 
 		// update toolbar
 		this.toolLevel.html(n);
