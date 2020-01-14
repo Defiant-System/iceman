@@ -103,8 +103,15 @@ content {
 				background: url(~/img/box.png) -30px -60px no-repeat;
 			}
 			
-			&.bounce { animation: bounce 800ms 1000ms ease-in-out forwards; }
-			&.exit { animation: exit 300ms ease-in forwards; }
+			&.landing {
+				transition: all 500ms 1000ms ease-in-out;
+			}
+			&.bounce {
+				animation: bounce 800ms 1000ms ease-in-out forwards;
+			}
+			&.exit {
+				animation: exit 300ms ease-in forwards;
+			}
 
 			&.p1:before { background: #790391; }
 			&.p2:before { background: #12bcf6; }

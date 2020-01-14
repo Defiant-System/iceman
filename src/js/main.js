@@ -26,11 +26,14 @@ const iceman = {
 					case "right": this.move(4); break;
 				}
 				break;
+			case "open-help":
+				defiant.shell("fs -u '~/help/index.md'");
+				break;
 			case "toggle-music":
 				if (window.music.playing) {
 					window.music.pause();
 				} else {
-					window.music.play("/app/ant/iceman/midi/Carlos Gardel - Por Una Cabeza.mid");
+					window.music.play("~/midi/Carlos Gardel - Por Una Cabeza.mid");
 				}
 				break;
 			case "level-completed":
@@ -49,6 +52,7 @@ const iceman = {
 				});
 				break;
 			case "restart-level":
+				this.content.removeClass("game-won hide-game-won");
 				this.drawLevel(PLAYER.level);
 				break;
 		}
@@ -60,6 +64,9 @@ const iceman = {
 
 		// calculate distance in order to calc movement speed
 		this.vector.distance = Math.abs(PLAYER.x - this.vector.x || PLAYER.y - this.vector.y);
+		
+		// player not moving - reset
+		if (!this.vector.distance) return PLAYER.moving = false;
 
 		PLAYER.x = this.vector.x;
 		PLAYER.y = this.vector.y;
@@ -153,7 +160,7 @@ const iceman = {
 			htm = [];
 
 		// player element
-		htm.push(`<div class="box player p${level.player.property}" style="top: ${top}px; left: ${left}px;"></div>`);
+		htm.push(`<div class="box player p${level.player.property}" style="top: 210px; left: 210px;" data-start="${top},${left}"></div>`);
 
 		// level map
 		level.map.split("").map((b, i) => {
@@ -186,7 +193,7 @@ const iceman = {
 		PLAYER.y = level.player.y;
 		PLAYER.x = level.player.x;
 		PLAYER.level = n;
-		PLAYER.moving = false;
+		PLAYER.moving = true;
 		PLAYER.property = level.player.property;
 		PLAYER.map = level.map;
 		PLAYER.gems = {
@@ -195,7 +202,18 @@ const iceman = {
 		};
 		// set user UI property
 		PLAYER.el.prop({className: "box player p"+ PLAYER.property});
-		PLAYER.el.cssSequence("bounce", "animationend", el => el.removeClass("bounce"));
+		
+		setTimeout(() => PLAYER.el
+			.cssSequence("bounce", "animationend", el => el.removeClass("bounce"))
+			.cssSequence("landing", "animationend", el => {
+				el.removeClass("landing");
+				// game can be played
+				PLAYER.moving = false;
+			})
+			.css({
+				top: top +"px",
+				left: left +"px",
+			}), 60);
 
 		// update toolbar
 		this.toolLevel.html(n);

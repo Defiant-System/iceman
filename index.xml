@@ -1,15 +1,15 @@
 <Application>
 	<Head>
 		<meta name="id" value="iceman"/>
-		<meta name="title" value="Iceman" version="1.2"/>
+		<meta name="title" value="Iceman" version="1.4"/>
 		<meta name="author" value="Hakan Bilgin" namespace="ant"/>
 		<meta name="license" value="AGPL-3.0-or-later"/>
 		<meta name="width" value="456"/>
 		<meta name="height" value="457"/>
-		<meta name="top" value="90"/>
+		<meta name="top" value="130"/>
 		<meta name="left" value="310"/>
 		<meta name="minimize"/>
-		<meta name="maximize"/>
+		<meta name="maximize" value="disabled"/>
 		<meta name="resize" value="disabled"/>
 		<meta name="script" value="src/js/main.js"/>
 		<meta name="style" value="src/css/main.less"/>
