@@ -26,10 +26,12 @@ const iceman = {
 					case "right": this.move(4); break;
 				}
 				break;
-			case "window.open":
-				break;
 			case "toggle-music":
-				window.music.play("/app/ant/iceman/midi/Mozart - Turkish March.mid");
+				if (window.music.playing) {
+					window.music.pause();
+				} else {
+					window.music.play("/app/ant/iceman/midi/Carlos Gardel - Por Una Cabeza.mid");
+				}
 				break;
 			case "level-completed":
 				// next level
