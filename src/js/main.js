@@ -14,7 +14,7 @@ const iceman = {
 	},
 	dispatch(event) {
 		switch (event.type) {
-			case "keystroke":
+			case "window.keystroke":
 				// player already moving - wait until move finish
 				if (PLAYER.moving) return;
 				PLAYER.moving = true;
