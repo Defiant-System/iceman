@@ -30,10 +30,10 @@ const iceman = {
 				defiant.shell("fs -u '~/help/index.md'");
 				break;
 			case "toggle-music":
-				if (window.music.playing) {
-					window.music.pause();
+				if (window.midi.playing) {
+					window.midi.pause();
 				} else {
-					window.music.play("~/midi/Carlos Gardel - Por Una Cabeza.mid");
+					window.midi.play("~/midi/Carlos Gardel - Por Una Cabeza.mid");
 				}
 				break;
 			case "level-completed":
