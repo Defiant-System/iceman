@@ -34,6 +34,7 @@ const iceman = {
 					window.midi.pause();
 				} else {
 					window.midi.play("~/midi/Carlos Gardel - Por Una Cabeza.mid");
+					return true;
 				}
 				break;
 			case "level-completed":

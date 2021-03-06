@@ -2,7 +2,7 @@
 	<Head>
 		<meta name="id" value="iceman"/>
 		<meta name="title" value="Iceman" version="1.4"/>
-		<meta name="author" value="Hakan Bilgin" namespace="ant"/>
+		<meta name="author" value="Gavin Delphia" namespace="ant" ported="Hakan Bilgin"/>
 		<meta name="license" value="AGPL-3.0-or-later"/>
 		<meta name="repository" value="https://github.com/Defiant-System/iceman"/>
 		<meta name="width" value="456"/>
