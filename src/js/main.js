@@ -82,8 +82,8 @@ const iceman = {
 					});
 				}
 			})
-			.prop({style: `--speed: ${this.vector.distance * PLAYER.speed || 1}ms`})
 			.css({
+				"--speed": `${this.vector.distance * PLAYER.speed || 1}ms`,
 				top: (PLAYER.y * 30) +"px",
 				left: (PLAYER.x * 30) +"px"
 			});
@@ -91,9 +91,9 @@ const iceman = {
 		// playback timeline
 		this.vector.timeline.map(event =>
 			event.el
-				.prop({style: `--delay: ${event.distance * PLAYER.speed}ms`})
 				.cssSequence("vanish", "transitionend", el => event.action())
 				.css({
+					"--delay": `${event.distance * PLAYER.speed}ms`,
 					top: (event.y * 30) +"px",
 					left: (event.x * 30) +"px"
 				}));
