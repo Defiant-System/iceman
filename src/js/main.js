@@ -33,7 +33,11 @@ const iceman = {
 				if (window.midi.playing) {
 					window.midi.pause();
 				} else {
-					window.midi.play("~/midi/Carlos Gardel - Por Una Cabeza.mid");
+					window.midi.play({
+						path: "~/midi/Carlos Gardel - Por Una Cabeza.mid",
+						reverb: "cathedral",
+						loop: true,
+					});
 					return true;
 				}
 				break;
