@@ -87,7 +87,7 @@ const iceman = {
 				}
 			})
 			.css({
-				"--speed": `${this.vector.distance * PLAYER.speed || 1}ms`,
+				"--speed": `${this.vector.distance * PLAYER.speed || 1}ms`,
 				top: (PLAYER.y * 30) +"px",
 				left: (PLAYER.x * 30) +"px"
 			});
@@ -107,7 +107,7 @@ const iceman = {
 		let y = (dir === 3) ? this.vector.y + 1 : (dir === 1) ? this.vector.y - 1 : this.vector.y;
 		let c = this.vector.map.charAt((y * 15) + x);
 		if ((x == 15 || x == -1 || y == 15 || y == -1)
-			|| (parseInt(c, 10) > 0 && parseInt(c, 10) < 7 && c != this.vector.property)) {
+			|| (parseInt(c, 10) > 0 && parseInt(c, 10) < 7 && c != this.vector.property)) {
 			return;
 		}
 
