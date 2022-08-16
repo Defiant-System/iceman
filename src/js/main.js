@@ -27,7 +27,7 @@ const iceman = {
 				}
 				break;
 			case "open-help":
-				defiant.shell("fs -u '~/help/index.md'");
+				karaqu.shell("fs -u '~/help/index.md'");
 				break;
 			case "toggle-music":
 				if (window.midi.playing) {
