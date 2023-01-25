@@ -1,6 +1,12 @@
 
 import { PLAYER, GEMS, LEVELS } from "./constants"
 
+// default settings
+const defaultSettings = {
+	"level": 0,
+};
+
+
 const iceman = {
 	init() {
 		// fast references
@@ -9,22 +15,38 @@ const iceman = {
 		this.toolLevel = window.find(".toolbar-info .level b");
 		this.toolGems = window.find(".toolbar-info .gems b");
 
-		//this.dispatch({type: "level-completed"});
-		this.dispatch({type: "next-level"});
+		// init settings
+		this.dispatch({ type: "init-settings" });
 	},
 	dispatch(event) {
+		let Self = iceman;
 		switch (event.type) {
+			// system events
+			case "window.close":
+				// save settings
+				window.settings.setItem("settings", Self.settings);
+				break;
 			case "window.keystroke":
 				// player already moving - wait until move finish
 				if (PLAYER.moving) return;
 				PLAYER.moving = true;
 
 				switch (event.char) {
-					case "up":    this.move(1); break;
-					case "down":  this.move(3); break;
-					case "left":  this.move(2); break;
-					case "right": this.move(4); break;
+					case "up":    Self.move(1); break;
+					case "down":  Self.move(3); break;
+					case "left":  Self.move(2); break;
+					case "right": Self.move(4); break;
 				}
+				break;
+			// custom events
+			case "init-settings":
+				// get settings, if any
+				Self.settings = window.settings.getItem("settings") || defaultSettings;
+				console.log( Self.settings );
+
+				PLAYER.level = Self.settings.level;
+
+				Self.dispatch({ type: "next-level" });
 				break;
 			case "open-help":
 				karaqu.shell("fs -u '~/help/index.md'");
@@ -43,22 +65,24 @@ const iceman = {
 				break;
 			case "level-completed":
 				// next level
-				this.content.addClass("game-won");
+				Self.content.addClass("game-won");
 				break;
 			case "next-level":
-				this.content.addClass("hide-game-won");
-				this.board.cssSequence("black-out", "transitionend", el => {
-					this.content.removeClass("game-won hide-game-won");
+				Self.content.addClass("hide-game-won");
+				Self.board.cssSequence("black-out", "transitionend", el => {
+					Self.content.removeClass("game-won hide-game-won");
+
+					Self.settings.level = PLAYER.level;
 
 					PLAYER.level++;
-					this.drawLevel(PLAYER.level);
+					Self.drawLevel(PLAYER.level);
 
 					el.removeClass("black-out");
 				});
 				break;
 			case "restart-level":
-				this.content.removeClass("game-won hide-game-won");
-				this.drawLevel(PLAYER.level);
+				Self.content.removeClass("game-won hide-game-won");
+				Self.drawLevel(PLAYER.level);
 				break;
 		}
 	},
