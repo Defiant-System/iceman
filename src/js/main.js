@@ -42,7 +42,6 @@ const iceman = {
 			case "init-settings":
 				// get settings, if any
 				Self.settings = window.settings.getItem("settings") || defaultSettings;
-				console.log( Self.settings );
 
 				PLAYER.level = Self.settings.level;
 
