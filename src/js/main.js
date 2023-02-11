@@ -103,10 +103,12 @@ const iceman = {
 				el.removeClass("moving");
 				PLAYER.moving = false;
 
-				if (this.vector.finished) {
+				// check for level exit
+				if (this.vector.c === 'F' && this.vector.gems.eaten === this.vector.gems.needed) {
 					PLAYER.el.cssSequence("exit", "animationend", el => {
 						this.dispatch({type: "level-completed"});
 					});
+					return;
 				}
 			})
 			.css({
@@ -137,12 +139,7 @@ const iceman = {
 		// update this.vector
 		this.vector.x = x;
 		this.vector.y = y;
-
-		// check for level exit
-		if (c === 'F' && this.vector.gems.eaten === this.vector.gems.needed) {
-			this.vector.finished = true; // Level finished
-			return;
-		}
+		this.vector.c = c;
 		
 		// check for gems on path
 		if (GEMS.indexOf(c) > -1) {
