@@ -1,5 +1,9 @@
 
+@import "test.js"
+
+
 import { PLAYER, GEMS, LEVELS } from "./constants"
+
 
 // default settings
 const defaultSettings = {
@@ -19,7 +23,8 @@ const iceman = {
 		this.dispatch({ type: "init-settings" });
 	},
 	dispatch(event) {
-		let Self = iceman;
+		let Self = iceman,
+			value;
 		switch (event.type) {
 			// system events
 			case "window.close":
@@ -44,11 +49,7 @@ const iceman = {
 				Self.settings = window.settings.getItem("settings") || defaultSettings;
 
 				PLAYER.level = Self.settings.level;
-
 				Self.dispatch({ type: "next-level" });
-				break;
-			case "open-help":
-				karaqu.shell("fs -u '~/help/index.md'");
 				break;
 			case "toggle-music":
 				if (window.midi.playing) {
@@ -79,9 +80,14 @@ const iceman = {
 					el.removeClass("black-out");
 				});
 				break;
+			case "start-level":
 			case "restart-level":
+				value = event.arg || PLAYER.level;
 				Self.content.removeClass("game-won hide-game-won");
-				Self.drawLevel(PLAYER.level);
+				Self.drawLevel(value);
+				break;
+			case "open-help":
+				karaqu.shell("fs -u '~/help/index.md'");
 				break;
 		}
 	},
@@ -140,6 +146,8 @@ const iceman = {
 		this.vector.x = x;
 		this.vector.y = y;
 		this.vector.c = c;
+
+		if (c === "F" && this.board.find(".box.bF").hasClass("exit-open")) return;
 		
 		// check for gems on path
 		if (GEMS.indexOf(c) > -1) {

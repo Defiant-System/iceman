@@ -4,6 +4,28 @@
 		<Menu type="divider"/>
 		<Menu name="Quit Iceman" shell="win -c"/>
 	</Menu>
+	<Menu name="Level">
+		<Menu name="1" click="start-level" arg="1"/>
+		<Menu name="2" click="start-level" arg="2"/>
+		<Menu name="3" click="start-level" arg="3"/>
+		<Menu name="4" click="start-level" arg="4"/>
+		<Menu name="5" click="start-level" arg="5"/>
+		<Menu name="6" click="start-level" arg="6"/>
+		<Menu name="7" click="start-level" arg="7"/>
+		<Menu name="8" click="start-level" arg="8"/>
+		<Menu name="9" click="start-level" arg="9"/>
+		<Menu name="10" click="start-level" arg="10"/>
+		<Menu name="11" click="start-level" arg="11"/>
+		<Menu name="12" click="start-level" arg="12"/>
+		<Menu name="13" click="start-level" arg="13"/>
+		<Menu name="14" click="start-level" arg="14"/>
+		<Menu name="15" click="start-level" arg="15"/>
+		<Menu name="16" click="start-level" arg="16"/>
+		<Menu name="17" click="start-level" arg="17"/>
+		<Menu name="18" click="start-level" arg="18"/>
+		<Menu name="19" click="start-level" arg="19"/>
+		<Menu name="20" click="start-level" arg="20"/>
+	</Menu>
 	<Menu name="Help">
 		<Menu name="How To Play" click="open-help"/>
 		<Menu type="divider"/>
