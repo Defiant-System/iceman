@@ -43,6 +43,29 @@ const iceman = {
 					case "right": Self.move(4); break;
 				}
 				break;
+			// gamepad support
+			case "gamepad.up":
+
+				switch (event.button) {
+					case "b0":
+						if (Self.content.hasClass("game-won")) {
+							Self.dispatch({ type: "next-level" });
+						}
+						break;
+					case "b12": // up
+					case "b14": // left
+					case "b15": // right
+					case "b13": // down
+						let map = {
+								"b12": "up",
+								"b14": "left",
+								"b15": "right",
+								"b13": "down",
+							};
+						Self.dispatch({ type: "window.keystroke", char: map[event.button] });
+						break;
+				}
+				break;
 			// custom events
 			case "init-settings":
 				// get settings, if any
