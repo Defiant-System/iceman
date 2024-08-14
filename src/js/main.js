@@ -43,6 +43,11 @@ const iceman = {
 					case "right": Self.move(4); break;
 				}
 				break;
+			// swipe support
+			case "swipe.up":    Self.move(1); break;
+			case "swipe.down":  Self.move(3); break;
+			case "swipe.left":  Self.move(2); break;
+			case "swipe.right": Self.move(4); break;
 			// gamepad support
 			case "gamepad.up":
 
