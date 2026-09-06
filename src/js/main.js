@@ -21,6 +21,9 @@ const iceman = {
 
 		// init settings
 		this.dispatch({ type: "init-settings" });
+
+		// music info
+		this.tune = { name: "tune-1" };
 	},
 	dispatch(event) {
 		let Self = iceman,
@@ -80,15 +83,28 @@ const iceman = {
 				Self.dispatch({ type: "next-level" });
 				break;
 			case "toggle-music":
-				if (window.midi.playing) {
-					window.midi.pause();
-				} else {
-					window.midi.play({
-						path: "~/midi/Carlos Gardel - Por Una Cabeza.mid",
-						reverb: "cathedral",
-						loop: true,
-					});
+				if (!Self.tune.song) {
+					let opt = {
+							onend: e => {
+								if (!Self.tune.song) return;
+
+								let [a, b] = Self.tune.name.split("-");
+								b = (+b) + 1;
+								// next tune
+								if (b > 2) b = 1;
+								Self.tune.name = "tune-"+ b;
+								// play next song
+								playSong();
+							}
+						},
+						playSong = () => window.audio.play(Self.tune.name, opt)
+												.then(song => Self.tune.song = song);
+					playSong();
+
 					return true;
+				} else if (Self.tune.song) {
+					Self.tune.song.stop();
+					delete Self.tune.song;
 				}
 				break;
 			case "level-completed":
